@@ -1,6 +1,7 @@
 class ContentsController < ApplicationController
   before_action :set_content, only: %i[ show edit update destroy ]
-
+  before_action :authenticate_user!,except:[:index,:show]
+  before_action :check_user,only:[:edit,:update,:destroy]
   # GET /contents or /contents.json
   def index
     @contents = Content.all
@@ -12,7 +13,7 @@ class ContentsController < ApplicationController
 
   # GET /contents/new
   def new
-    @content = Content.new
+    @content = current_user.contents.build
   end
 
   # GET /contents/1/edit
@@ -21,15 +22,13 @@ class ContentsController < ApplicationController
 
   # POST /contents or /contents.json
   def create
-    @content = Content.new(content_params)
+    @content = current_user.contents.build(content_params)
 
     respond_to do |format|
       if @content.save
         format.html { redirect_to @content, notice: "Content was successfully created." }
-        format.json { render :show, status: :created, location: @content }
       else
         format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @content.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -65,5 +64,10 @@ class ContentsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def content_params
       params.require(:content).permit(:titolo, :descrizione, :price)
+    end
+    def check_user
+      if current_user != @content.user
+         redirect_to root_url,alert:"Scusa ma non hai accesso a questa pagina"
+      end
     end
 end
