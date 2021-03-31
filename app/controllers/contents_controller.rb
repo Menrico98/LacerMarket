@@ -4,7 +4,8 @@ class ContentsController < ApplicationController
   before_action :check_user,only:[:edit,:update,:destroy]
   # GET /contents or /contents.json
   def index
-    @contents = Content.all
+    @contents = Content.all.order("created_at DESC")
+ 
   end
 
   # GET /contents/1 or /contents/1.json
