@@ -1,5 +1,7 @@
 @import "materialize";
-
+ h1{
+  font-size:3em;
+ }
  body {
     display: flex;
     min-height: 100vh;
@@ -22,5 +24,8 @@
   }
   .show-img{
     padding-right:5%;
+  }
+  .btn-form{
+    width:100%;
   }
   
